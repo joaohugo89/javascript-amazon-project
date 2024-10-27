@@ -57,7 +57,27 @@ class Clothing extends Product{
   }
 }
 
-export const products = [
+export let products = [];
+
+export function loadProducts(fun) {
+  const xhr = new XMLHttpRequest();
+  xhr.addEventListener('load', () => {
+    products = JSON.parse(xhr.response).map((productDetais) => {
+      if (productDetais.type === 'clothing'){
+        return new Clothing(productDetais);
+      }
+      return new Product(productDetais);
+    });
+    console.log("load products")
+    fun();
+  });
+
+  xhr.open('GET', 'https://supersimplebackend.dev/products');
+  xhr.send();  
+}
+
+
+/*export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
     image: "images/products/athletic-cotton-socks-6-pairs.jpg",
@@ -722,3 +742,5 @@ export const products = [
   }
   return new Product(productDetais);
 });
+*/
+
